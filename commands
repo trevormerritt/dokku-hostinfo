@@ -3,25 +3,23 @@ set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
 source "$PLUGIN_CORE_AVAILABLE_PATH/common/functions"
 
 dokku_hostinfo_hostname() {
-  HOSTNAME=`hostname -f`
-  printf "Hostname:\t$HOSTNAME\n"
+  HOSTNAME=$(/bin/hostname -f)
+  echo -e "Hostname:\t$HOSTNAME"
 }
 
 dokku_hostinfo_memory() {
-  MEMORY=`free -h`
-  printf "Memory:\t$MEMORY\n"
+  MEMORY=$(free -h)
+  echo -e "Memory:\t$MEMORY"
 }
 
 dokku_hostinfo_disk() {
-  HOSTDISK=`df`
-  printf "Disk:\t"
-  echo -e "$HOSTDISK"
-  printf "\n"
+  HOSTDISK=$(df)
+  echo -e "Disk:\t$HOSTDISK"
 }
 
 dokku_hostinfo_uptime() {
-  UPTIME=`uptime`
-  printf "Uptime:\t$UPTIME\n"
+  UPTIME=$(uptime)
+  echo -e "Uptime:\t$UPTIME"
 }
 
 case "$1" in
