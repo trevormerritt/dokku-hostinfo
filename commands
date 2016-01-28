@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
+source "$PLUGIN_CORE_AVAILABLE_PATH/common/functions"
+
+dokku_hostinfo_hostname() {
+  HOSTNAME=`hostname -f`
+  printf "Hostname:\t$HOSTNAME\n"
+}
+
+dokku_hostinfo_memory() {
+  MEMORY=`free -h`
+  printf "Memory:\t$MEMORY\n"
+}
+
+dokku_hostinfo_disk() {
+  HOSTDISK=`df`
+  printf "Disk:\t"
+  echo -e "$HOSTDISK"
+  printf "\n"
+}
+
+dokku_hostinfo_uptime() {
+  UPTIME=`uptime`
+  printf "Uptime:\t$UPTIME\n"
+}
+
+case "$1" in
+  hostinfo)
+    dokku_hostinfo_hostname;
+    dokku_hostinfo_uptime;
+    dokku_hostinfo_memory;
+    dokku_hostinfo_disk;
+    ;;
+
+  hostinfo:hostname)
+    dokku_hostinfo_hostname;
+    ;;
+
+  hostinfo:memory)
+    dokku_hostinfo_memory;
+    ;;
+
+  hostinfo:disk)
+    dokku_hostinfo_disk;
+    ;;
+
+  hostinfo:uptime)
+    dokku_hostinfo_uptime;
+    ;;
+   
+
+  help)
+    cat<<EOF
+    hostinfo, Disaplys dokku host info
+    hostinfo:memory, Displays dokku host memory
+    hostinfo:disk, Displays dokku disk usage
+    hostinfo:hostname, Displays dokku hostname
+    hostinfo:uptime, Displays dokku host uptime
+EOF
+    ;;
+
+  *)
+    exit $DOKKU_NOT_IMPLEMENTED_EXIT
+    ;;
+
+esac
