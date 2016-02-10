@@ -50,9 +50,9 @@ case "$1" in
   help)
     cat<<EOF
     hostinfo, Displays dokku host info
+    hostinfo:hostname, Displays dokku hostname
     hostinfo:memory, Displays dokku host memory
     hostinfo:disk, Displays dokku disk usage
-    hostinfo:hostname, Displays dokku hostname
     hostinfo:uptime, Displays dokku host uptime
 EOF
     ;;
