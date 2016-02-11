@@ -2,32 +2,44 @@
 set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
 source "$PLUGIN_CORE_AVAILABLE_PATH/common/functions"
 
+dokku_hostinfo_cpu() {
+  CPU_LOAD=$(top -b -n1 | grep "Cpu(s)" | awk '{print $2 + $4}')
+  echo -e "Load:\t$CPU_LOAD"
+}
+
 dokku_hostinfo_hostname() {
   HOSTNAME=$(/bin/hostname -f)
   echo -e "Hostname:\t$HOSTNAME"
 }
 
 dokku_hostinfo_memory() {
-  MEMORY=$(free -h)
-  echo -e "Memory:\t$MEMORY"
+  MEMORY=$(free -m | awk 'NR==2{printf "Memory Usage: %s/%sMB (%.2f%%)\n", $3,$2,$3*100/$2 }')
+  echo -e "$MEMORY"
 }
 
 dokku_hostinfo_disk() {
-  HOSTDISK=$(df)
-  echo -e "Disk:\t$HOSTDISK"
+  FREE_PERCENT=$(df -lh | awk '{if ($6 == "/") { print $5 }}' | head -1 | cut -d'%' -f1 )
+  FREE_GB=$(df -lh | awk '{if ($6 == "/") { print $4 }}' | head -1 | cut -d'%' -f 1 )
+  echo -e "Disk: /\t$FREE_PERCENT\t$FREE_GB"
 }
 
 dokku_hostinfo_uptime() {
-  UPTIME=$(uptime)
+  UPTIME=$(uptime | sed -E 's/^[^,]*up *//; s/, *[[:digit:]]* users.*//; s/min/minutes/; s/([[:digit:]]+):0?([[:digit:]]+)/\1 hours, \2 minutes/' 
+  )
   echo -e "Uptime:\t$UPTIME"
 }
 
 case "$1" in
   hostinfo)
+    dokku_hostinfo_cpu;
     dokku_hostinfo_hostname;
     dokku_hostinfo_uptime;
     dokku_hostinfo_memory;
     dokku_hostinfo_disk;
+    ;;
+
+  hostinfo:cpu)
+    dokku_hostinfo_cpu;
     ;;
 
   hostinfo:hostname)
@@ -54,6 +66,7 @@ case "$1" in
     hostinfo:memory, Displays dokku host memory
     hostinfo:disk, Displays dokku disk usage
     hostinfo:uptime, Displays dokku host uptime
+    hostinfo:cpu, Displays dokku host cpu load
 EOF
     ;;
 
