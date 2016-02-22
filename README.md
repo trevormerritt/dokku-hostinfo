@@ -6,8 +6,7 @@ This project provides a plugin for [Dokku][] to extract information about the un
 
 ## Requires
 
-- **Dokku**
-- **dokku-daemon**
+- **dokku 0.4.5+**
 
 ## Install
 
@@ -31,7 +30,7 @@ $ dokku help
     hostinfo:hostname  Displays dokku hostname
     hostinfo:memory    Displays dokku host memory
     hostinfo:uptime    Displays dokku host uptime
-
+    hostinfo:cpu       Displays dokku host CPU usage
 
 ```
 ```
