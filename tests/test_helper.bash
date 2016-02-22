@@ -10,9 +10,6 @@ export PLUGIN_AVAILABLE_PATH="$PLUGIN_PATH"
 export PLUGIN_CORE_AVAILABLE_PATH="$PLUGIN_PATH"
 export PLUGN_URL="https://github.com/dokku/plugn/releases/download/v0.2.1/plugn_0.2.1_linux_x86_64.tgz"
 
-mkdir -p "$PLUGIN_DATA_ROOT"
-rm -rf "${PLUGIN_DATA_ROOT:?}"/*
-
 flunk() {
   { if [ "$#" -eq 0 ]; then cat -
     else echo "$*"
